@@ -6,96 +6,409 @@
     <title>Corsette Lazzaretto</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0065b3">
+
     <style>
-        body { font-family: Arial, sans-serif; background: #f4f6f8; margin: 0; padding: 20px; }
-        .container { max-width: 700px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 3px 12px rgba(0,0,0,.12); }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        h1 { color: #0065b3; margin: 0; font-size: 24px; }
-        .btn-refresh { background: #0065b3; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,.15); transition: transform .2s, background-color .2s; }
-        .btn-refresh:active { transform: scale(.92); background-color: #004a83; }
-        label { display: block; margin-bottom: 8px; font-size: 16px; font-weight: bold; color: #555; }
-        select { width: 100%; padding: 12px; font-size: 18px; border-radius: 8px; border: 1px solid #ccc; outline: none; background-color: #fff; box-sizing: border-box; }
-        .card { background: #0065b3; color: white; padding: 20px; border-radius: 10px; margin-top: 20px; position: relative; }
-        .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-        .next { font-size: 38px; font-weight: bold; margin: 8px 0 4px 0; }
-        .badge-domani { font-size: 18px; font-weight: normal; opacity: .85; margin-left: 8px; }
-        .info-arrivo { font-size: 14px; opacity: .9; margin-top: 4px; }
-        .btn-bell-main { background: rgba(255,255,255,.2); color: white; border: 1px solid rgba(255,255,255,.4); border-radius: 8px; padding: 8px 12px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background .2s; white-space: nowrap; }
-        .btn-bell-main:hover { background: rgba(255,255,255,.3); }
-        h3 { color: #333; margin-top: 25px; margin-bottom: 10px; }
-        ul { padding: 0; margin: 0; }
-        li { background: #eef4fa; padding: 12px 15px; margin: 8px 0; border-radius: 8px; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; }
-        .li-info { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .li-arrivo { font-size: 13px; color: #666; font-weight: normal; }
-        .tag-domani { font-size: 11px; background: #d0e1f9; color: #004080; padding: 2px 6px; border-radius: 10px; font-weight: bold; text-transform: uppercase; }
-        .btn-bell { background: white; border: 1px solid #0065b3; color: #0065b3; border-radius: 6px; padding: 6px 10px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: background .2s; white-space: nowrap; }
-        .btn-bell:hover { background-color: #e6f0fa; }
-        .btn-espandi { width: 100%; background: #eef4fa; color: #0065b3; border: 2px dashed #0065b3; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 15px; transition: background .2s; }
-        .btn-espandi:hover { background: #e0ecf8; }
-        .nota-promemoria { color: #666; font-size: 12px; margin-top: 12px; line-height: 1.35; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+            color: #222;
+            transition: background .25s, color .25s;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.12);
+            transition: background .25s, color .25s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h1 {
+            color: #0065b3;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .btn-refresh,
+        .btn-dark {
+            background: #0065b3;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,.15);
+            transition: transform .2s, background-color .2s;
+        }
+
+        .btn-refresh:active,
+        .btn-dark:active {
+            transform: scale(.92);
+            background-color: #004a83;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .card {
+            background: #0065b3;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            position: relative;
+            transition: background .3s, transform .3s, box-shadow .3s;
+        }
+
+        .card.imminente {
+            background: #e85d04;
+            box-shadow: 0 0 0 4px rgba(232,93,4,.18), 0 6px 18px rgba(0,0,0,.22);
+            animation: pulseImminente 1.4s infinite;
+        }
+
+        @keyframes pulseImminente {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.015);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .next {
+            font-size: 38px;
+            font-weight: bold;
+            margin: 8px 0 4px 0;
+        }
+
+        .badge-domani {
+            font-size: 18px;
+            font-weight: normal;
+            opacity: .85;
+            margin-left: 8px;
+        }
+
+        .info-arrivo {
+            font-size: 14px;
+            opacity: .9;
+            margin-top: 4px;
+        }
+
+        .btn-bell-main {
+            background: rgba(255,255,255,.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,.4);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background .2s;
+            white-space: nowrap;
+        }
+
+        .btn-bell-main:hover {
+            background: rgba(255,255,255,.3);
+        }
+
+        h3 {
+            color: #333;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background: #eef4fa;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 8px;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background .25s, color .25s;
+        }
+
+        .li-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .li-arrivo {
+            font-size: 13px;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .tag-domani {
+            font-size: 11px;
+            background: #d0e1f9;
+            color: #004080;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-bell {
+            background: white;
+            border: 1px solid #0065b3;
+            color: #0065b3;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: background .2s;
+            white-space: nowrap;
+        }
+
+        .btn-bell:hover {
+            background-color: #e6f0fa;
+        }
+
+        .btn-espandi {
+            width: 100%;
+            background: #eef4fa;
+            color: #0065b3;
+            border: 2px dashed #0065b3;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background .2s;
+        }
+
+        .btn-espandi:hover {
+            background: #e0ecf8;
+        }
+
+        .nota-promemoria {
+            color: #666;
+            font-size: 12px;
+            margin-top: 12px;
+            line-height: 1.35;
+        }
+
+        .versione-app {
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            margin-top: 15px;
+        }
+
+        body.dark {
+            background: #101418;
+            color: #f1f1f1;
+        }
+
+        body.dark .container {
+            background: #1a2027;
+            color: #f1f1f1;
+            box-shadow: 0 3px 16px rgba(0,0,0,.45);
+        }
+
+        body.dark h1 {
+            color: #75bfff;
+        }
+
+        body.dark label,
+        body.dark h3 {
+            color: #e5e5e5;
+        }
+
+        body.dark li {
+            background: #263241;
+            color: #f1f1f1;
+        }
+
+        body.dark .li-arrivo {
+            color: #c7c7c7;
+        }
+
+        body.dark .btn-bell {
+            background: #1a2027;
+            color: #75bfff;
+            border-color: #75bfff;
+        }
+
+        body.dark .btn-bell:hover {
+            background: #223247;
+        }
+
+        body.dark .btn-espandi {
+            background: #263241;
+            color: #75bfff;
+            border-color: #75bfff;
+        }
+
+        body.dark .btn-espandi:hover {
+            background: #2d3c4f;
+        }
+
+        body.dark .nota-promemoria,
+        body.dark .versione-app {
+            color: #aaa;
+        }
+
+        body.dark .tag-domani {
+            background: #365d8b;
+            color: #eaf4ff;
+        }
+
         @media (max-width: 520px) {
-            body { padding: 12px; }
-            .container { padding: 18px; }
-            h1 { font-size: 22px; }
-            .card-top { flex-direction: column; }
-            .btn-bell-main { width: 100%; justify-content: center; }
-            li { align-items: stretch; flex-direction: column; }
-            .btn-bell { justify-content: center; width: 100%; }
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 18px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .card-top {
+                flex-direction: column;
+            }
+
+            .btn-bell-main {
+                width: 100%;
+                justify-content: center;
+            }
+
+            li {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .btn-bell {
+                justify-content: center;
+                width: 100%;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
+
         <div class="header">
             <h1>🚍 Corsette Lazzaretto</h1>
-            <button class="btn-refresh" onclick="aggiornaManuale()" title="Aggiorna orari">🔄</button>
+
+            <div class="header-actions">
+                <button class="btn-dark" onclick="toggleDarkMode()" title="Modalità scura" id="btn-dark">🌙</button>
+                <button class="btn-refresh" onclick="aggiornaManuale()" title="Aggiorna orari">🔄</button>
+            </div>
         </div>
 
         <label>DESTINAZIONE</label>
 
-<div style="margin-bottom:15px;">
+        <div style="margin-bottom:15px;">
+            <label style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+                <input
+                    type="radio"
+                    name="destinazione"
+                    value="lazzaretto"
+                    onchange="cambiaDestinazioneRadio(this.value)"
+                    checked>
+                VIA DEL LAZZARETTO
+            </label>
 
-    <label style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-        <input
-            type="radio"
-            name="destinazione"
-            value="lazzaretto"
-            onchange="cambiaDestinazioneRadio(this.value)"
-            checked>
-        VIA DEL LAZZARETTO
-    </label>
+            <label style="display:flex;align-items:center;gap:8px;">
+                <input
+                    type="radio"
+                    name="destinazione"
+                    value="fioravanti"
+                    onchange="cambiaDestinazioneRadio(this.value)">
+                STAZIONE DI BOLOGNA
+            </label>
+        </div>
 
-    <label style="display:flex;align-items:center;gap:8px;">
-        <input
-            type="radio"
-            name="destinazione"
-            value="fioravanti"
-            onchange="cambiaDestinazioneRadio(this.value)">
-        STAZIONE DI BOLOGNA
-    </label>
+        <input type="hidden" id="destinazione" value="lazzaretto">
 
-</div>
-
-<input type="hidden" id="destinazione" value="lazzaretto">
-
-<div class="card">
+        <div class="card" id="card-prossima">
             <div class="card-top">
                 <div>Prossima partenza</div>
                 <button class="btn-bell-main" id="btn-bell-prossima">🔔 Promemoria</button>
             </div>
+
             <div class="next" id="prossima">--:--</div>
             <div id="attesa">--</div>
             <div class="info-arrivo" id="arrivo-prossima">--</div>
         </div>
 
         <h3>Corse successive</h3>
+
         <ul id="lista"></ul>
+
         <button class="btn-espandi" id="btn-espandi" onclick="toggleEspandi()">Vedi tutte le corse</button>
-        <div class="nota-promemoria">Il pulsante promemoria crea un file calendario con avviso 10 minuti prima della partenza.</div>
+
+        <div class="nota-promemoria">
+            Il pulsante promemoria crea un file calendario con avviso 10 minuti prima della partenza.
+        </div>
+
+        <div class="versione-app">
+            v0.4
+        </div>
     </div>
 
     <script>
-    // Tabella delle partenze e degli arrivi esatti (Lun-Ven) estratta dal PDF
     const corse = {
       lazzaretto: [
         { dep: '05:45', arr: '05:53' }, { dep: '06:35', arr: '06:43' }, { dep: '06:55', arr: '07:05' },
@@ -141,53 +454,98 @@
         .replace(/,/g, '\\,')
         .replace(/\n/g, '\\n');
     }
-function mostraToast(testo) {
-  const toast = document.createElement('div');
 
-  toast.textContent = testo;
+    function mostraToast(testo) {
+      const toast = document.createElement('div');
 
-  toast.style.position = 'fixed';
-  toast.style.bottom = '20px';
-  toast.style.left = '50%';
-  toast.style.transform = 'translateX(-50%)';
-  toast.style.background = '#333';
-  toast.style.color = '#fff';
-  toast.style.padding = '12px 18px';
-  toast.style.borderRadius = '8px';
-  toast.style.boxShadow = '0 4px 12px rgba(0,0,0,.25)';
-  toast.style.zIndex = '9999';
-  toast.style.fontSize = '14px';
-  toast.style.maxWidth = '90%';
-  toast.style.textAlign = 'center';
-  toast.style.opacity = '1';
+      toast.textContent = testo;
 
-  document.body.appendChild(toast);
+      toast.style.position = 'fixed';
+      toast.style.bottom = '20px';
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%)';
+      toast.style.background = '#333';
+      toast.style.color = '#fff';
+      toast.style.padding = '12px 18px';
+      toast.style.borderRadius = '8px';
+      toast.style.boxShadow = '0 4px 12px rgba(0,0,0,.25)';
+      toast.style.zIndex = '9999';
+      toast.style.fontSize = '14px';
+      toast.style.maxWidth = '90%';
+      toast.style.textAlign = 'center';
+      toast.style.opacity = '1';
 
-  setTimeout(() => {
-    toast.style.transition = 'opacity 0.3s';
-    toast.style.opacity = '0';
-  }, 2500);
+      document.body.appendChild(toast);
 
-  setTimeout(() => {
-    toast.remove();
-  }, 3000);
-}
-``
-    function creaPromemoria(oraPartenza, oraArrivo, isDomani) {
+      setTimeout(() => {
+        toast.style.transition = 'opacity 0.3s';
+        toast.style.opacity = '0';
+      }, 2500);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }
+
+    function isGiornoServizio(data) {
+      const giorno = data.getDay();
+      return giorno >= 1 && giorno <= 5;
+    }
+
+    function nomeGiorno(data) {
+      const nomi = ['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'];
+      return nomi[data.getDay()];
+    }
+
+    function etichettaGiorno(offset, data) {
+      if (offset === 0) {
+        return '';
+      }
+
+      if (offset === 1) {
+        return 'domani';
+      }
+
+      return nomeGiorno(data);
+    }
+
+    function calcolaProssimoGiornoServizioOffset(daData) {
+      for (let offset = 1; offset <= 7; offset++) {
+        const candidata = new Date(daData);
+        candidata.setDate(candidata.getDate() + offset);
+
+        if (isGiornoServizio(candidata)) {
+          return offset;
+        }
+      }
+
+      return 1;
+    }
+
+    function creaDataCorsa(oraPartenza, offsetGiorni) {
       const [h, m] = oraPartenza.split(':').map(Number);
-      const dataPartenza = new Date();
-      if (isDomani) { dataPartenza.setDate(dataPartenza.getDate() + 1); }
-      dataPartenza.setHours(h, m, 0, 0);
+      const data = new Date();
+      data.setDate(data.getDate() + offsetGiorni);
+      data.setHours(h, m, 0, 0);
+      return data;
+    }
+
+    function creaPromemoria(oraPartenza, oraArrivo, offsetGiorni) {
+      const dataPartenza = creaDataCorsa(oraPartenza, offsetGiorni);
 
       const [ha, ma] = oraArrivo.split(':').map(Number);
       const dataArrivo = new Date(dataPartenza);
       dataArrivo.setHours(ha, ma, 0, 0);
-      if (dataArrivo < dataPartenza) { dataArrivo.setDate(dataArrivo.getDate() + 1); }
 
-const destNome =
-    sel.value === 'lazzaretto'
-        ? 'VIA DEL LAZZARETTO'
-        : 'STAZIONE DI BOLOGNA';
+      if (dataArrivo < dataPartenza) {
+        dataArrivo.setDate(dataArrivo.getDate() + 1);
+      }
+
+      const destNome =
+        sel.value === 'lazzaretto'
+          ? 'VIA DEL LAZZARETTO'
+          : 'STAZIONE DI BOLOGNA';
+
       const titolo = `Navetta per ${destNome}`;
       const dettagli = `Partenza navetta alle ${oraPartenza}. Arrivo previsto alle ${oraArrivo}.`;
       const adesso = new Date();
@@ -217,125 +575,226 @@ const destNome =
 
       const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
       const url = URL.createObjectURL(blob);
+
       const a = document.createElement('a');
       a.href = url;
       a.download = `promemoria-navetta-${oraPartenza.replace(':', '')}.ics`;
+
       document.body.appendChild(a);
-a.click();
-document.body.removeChild(a);
+      a.click();
+      document.body.removeChild(a);
 
-mostraToast(
-  `✅ Promemoria ${oraPartenza} salvato nei Download`
-);
+      mostraToast(`✅ Promemoria ${oraPartenza} salvato nei Download`);
 
-setTimeout(() => {
-  URL.revokeObjectURL(url);
-}, 1000);
-    }
-
-    function cambiaDestinazione() {
-      localStorage.setItem('destinazione_selezionata', sel.value);
-      aggiorna();
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+      }, 1000);
     }
 function cambiaDestinazioneRadio(valore) {
-
     sel.value = valore;
-
     aggiorna();
-
 }
     function aggiornaManuale() {
       const btn = document.querySelector('.btn-refresh');
+
       btn.style.transform = 'rotate(360deg)';
       btn.style.transition = 'transform 0.4s ease';
-      setTimeout(() => { btn.style.transform = 'none'; btn.style.transition = 'none'; }, 400);
+
+      setTimeout(() => {
+        btn.style.transform = 'none';
+        btn.style.transition = 'none';
+      }, 400);
+
       aggiorna();
     }
 
     function toggleEspandi() {
       mostraTutte = !mostraTutte;
+
       const btn = document.getElementById('btn-espandi');
       btn.textContent = mostraTutte ? 'Mostra meno' : 'Vedi tutte le corse';
+
       aggiorna();
     }
 
-    function aggiorna() {
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark');
+
+      const darkAttivo = document.body.classList.contains('dark');
+      localStorage.setItem('dark_mode_navetta', darkAttivo ? '1' : '0');
+
+      document.getElementById('btn-dark').textContent = darkAttivo ? '☀️' : '🌙';
+    }
+
+    function caricaDarkMode() {
+      const darkSalvato = localStorage.getItem('dark_mode_navetta');
+
+      if (darkSalvato === '1') {
+        document.body.classList.add('dark');
+        document.getElementById('btn-dark').textContent = '☀️';
+      } else {
+        document.getElementById('btn-dark').textContent = '🌙';
+      }
+    }
+
+    function generaCorseFuture() {
       const t = sel.value;
       const arr = corse[t];
       const now = new Date();
-      const attualiMinuti = now.getHours() * 60 + now.getMinutes();
-      let corseFuture = [];
+      const corseFuture = [];
 
-      for (let c of arr) {
-        const [h, m] = c.dep.split(':').map(Number);
-        const corsaMinuti = h * 60 + m;
-        if (corsaMinuti >= attualiMinuti) {
-          corseFuture.push({ orario: c.dep, arrivo: c.arr, minutiAttesa: corsaMinuti - attualiMinuti, isDomani: false });
+      if (isGiornoServizio(now)) {
+        for (let c of arr) {
+          const dataPartenza = creaDataCorsa(c.dep, 0);
+
+          if (dataPartenza >= now) {
+            const diffMs = dataPartenza - now;
+            corseFuture.push({
+              orario: c.dep,
+              arrivo: c.arr,
+              offsetGiorni: 0,
+              etichetta: '',
+              dataPartenza: dataPartenza,
+              diffMs: diffMs
+            });
+          }
         }
       }
 
+      const prossimoOffset = calcolaProssimoGiornoServizioOffset(now);
+      const dataProssimoServizio = new Date(now);
+      dataProssimoServizio.setDate(dataProssimoServizio.getDate() + prossimoOffset);
+
       for (let c of arr) {
-        const [h, m] = c.dep.split(':').map(Number);
-        const corsaMinuti = h * 60 + m;
-        corseFuture.push({ orario: c.dep, arrivo: c.arr, minutiAttesa: (1440 - attualiMinuti) + corsaMinuti, isDomani: true });
+        const dataPartenza = creaDataCorsa(c.dep, prossimoOffset);
+        const diffMs = dataPartenza - now;
+
+        corseFuture.push({
+          orario: c.dep,
+          arrivo: c.arr,
+          offsetGiorni: prossimoOffset,
+          etichetta: etichettaGiorno(prossimoOffset, dataProssimoServizio),
+          dataPartenza: dataPartenza,
+          diffMs: diffMs
+        });
       }
 
-      const prossima = corseFuture[0];
+      corseFuture.sort((a, b) => a.dataPartenza - b.dataPartenza);
 
-      if (prossima.isDomani) {
-        document.getElementById('prossima').innerHTML = `${prossima.orario} <span class="badge-domani">(domani)</span>`;
+      return corseFuture;
+    }
+    function aggiorna() {
+      const corseFuture = generaCorseFuture();
+      const prossima = corseFuture[0];
+      const card = document.getElementById('card-prossima');
+
+      if (!prossima) {
+        document.getElementById('prossima').innerText = '--:--';
+        document.getElementById('attesa').innerText = 'Nessuna corsa disponibile';
+        document.getElementById('arrivo-prossima').innerText = '--';
+        card.classList.remove('imminente');
+        return;
+      }
+
+      if (prossima.etichetta) {
+        document.getElementById('prossima').innerHTML =
+          `${prossima.orario} <span class="badge-domani">(${prossima.etichetta})</span>`;
       } else {
         document.getElementById('prossima').innerText = prossima.orario;
       }
 
-      document.getElementById('arrivo-prossima').innerText = `🏁 Arrivo previsto a destinazione: ${prossima.arrivo}`;
-      document.getElementById('btn-bell-prossima').onclick = () => creaPromemoria(prossima.orario, prossima.arrivo, prossima.isDomani);
+      document.getElementById('arrivo-prossima').innerText =
+        `🏁 Arrivo previsto a destinazione: ${prossima.arrivo}`;
 
-      const m = prossima.minutiAttesa;
-      if (m >= 60) {
-        const ore = Math.floor(m / 60);
-        const minRimanenti = m % 60;
-        document.getElementById('attesa').innerText = `tra ${ore}h e ${minRimanenti}m`;
+      document.getElementById('btn-bell-prossima').onclick = () =>
+        creaPromemoria(prossima.orario, prossima.arrivo, prossima.offsetGiorni);
+
+      const diffMs = prossima.diffMs;
+      const totaleSecondi = Math.max(0, Math.floor(diffMs / 1000));
+      const minutiTotali = Math.ceil(diffMs / 60000);
+
+      if (diffMs < 10 * 60 * 1000 && diffMs >= 0) {
+        const minuti = Math.floor(totaleSecondi / 60);
+        const secondi = totaleSecondi % 60;
+
+        document.getElementById('attesa').innerText =
+          `tra ${minuti}m ${String(secondi).padStart(2, '0')}s`;
+
+        card.classList.add('imminente');
       } else {
-        document.getElementById('attesa').innerText = `tra ${m} minuti`;
+        card.classList.remove('imminente');
+
+        if (minutiTotali >= 60) {
+          const ore = Math.floor(minutiTotali / 60);
+          const minRimanenti = minutiTotali % 60;
+          document.getElementById('attesa').innerText = `tra ${ore}h e ${minRimanenti}m`;
+        } else {
+          document.getElementById('attesa').innerText = `tra ${minutiTotali} minuti`;
+        }
       }
 
       const ul = document.getElementById('lista');
       ul.innerHTML = '';
+
       const corseSuccessive = mostraTutte
-    ? corseFuture.slice(1)
-    : corseFuture.slice(1, 6);
+        ? corseFuture.slice(1)
+        : corseFuture.slice(1, 6);
 
       for (let c of corseSuccessive) {
         let li = document.createElement('li');
+
         let divInfo = document.createElement('div');
         divInfo.className = 'li-info';
+
         let spanOra = document.createElement('strong');
         spanOra.textContent = c.orario;
         divInfo.appendChild(spanOra);
+
         let spanArrivo = document.createElement('span');
         spanArrivo.className = 'li-arrivo';
         spanArrivo.textContent = `(Arr. ${c.arrivo})`;
         divInfo.appendChild(spanArrivo);
-        if (c.isDomani) {
+
+        if (c.etichetta) {
           let tag = document.createElement('span');
           tag.className = 'tag-domani';
-          tag.textContent = 'domani';
+          tag.textContent = c.etichetta;
           divInfo.appendChild(tag);
         }
+
         li.appendChild(divInfo);
+
         let btnBell = document.createElement('button');
         btnBell.className = 'btn-bell';
         btnBell.innerHTML = '🔔 Promemoria';
-	btnBell.title = 'Promemoria 10 minuti prima della partenza';
-        btnBell.onclick = () => creaPromemoria(c.orario, c.arrivo, c.isDomani);
+        btnBell.title = 'Promemoria 10 minuti prima della partenza';
+        btnBell.onclick = () => creaPromemoria(c.orario, c.arrivo, c.offsetGiorni);
+
         li.appendChild(btnBell);
         ul.appendChild(li);
       }
     }
 
+    function inizializzaDestinazioneDefault() {
+      sel.value = 'lazzaretto';
+
+      const radioLazzaretto = document.querySelector('input[name="destinazione"][value="lazzaretto"]');
+      const radioFioravanti = document.querySelector('input[name="destinazione"][value="fioravanti"]');
+
+      if (radioLazzaretto) {
+        radioLazzaretto.checked = true;
+      }
+
+      if (radioFioravanti) {
+        radioFioravanti.checked = false;
+      }
+    }
+
+    inizializzaDestinazioneDefault();
+    caricaDarkMode();
     aggiorna();
-    setInterval(aggiorna, 30000);
+
+    setInterval(aggiorna, 1000);
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js'));
