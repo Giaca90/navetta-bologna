@@ -1,1 +1,307 @@
-<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Navetta Bologna</title><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0065b3"><style>body{font-family:Arial,sans-serif;background:#f4f6f8;margin:0;padding:20px}.container{max-width:700px;margin:auto;background:white;padding:25px;border-radius:15px;box-shadow:0 3px 12px rgba(0,0,0,.12)}h1{text-align:center;color:#0065b3}select{width:100%;padding:12px;font-size:18px;border-radius:8px}.card{background:#0065b3;color:white;padding:20px;border-radius:10px;margin-top:20px}.next{font-size:40px;font-weight:bold}li{background:#eef4fa;padding:10px;margin:5px 0;border-radius:8px;list-style:none}</style></head><body><div class="container"><h1>🚍 Navetta Bologna</h1><label style="display:block;margin-bottom:8px;font-size:16px;font-weight:bold;color:#555;">DESTINAZIONE</label><select id="destinazione" onchange="aggiorna()"><option value="lazzaretto">VIA DEL LAZZARETTO</option><option value="stazione">STAZIONE DI BOLOGNA</option></select><div class="card"><div>Prossima partenza</div><div class="next" id="prossima"></div><div id="attesa"></div></div><h3>Corse successive</h3><ul id="lista"></ul></div><script>const orari={lazzaretto:['05:45','06:35','06:55','07:05','07:15','07:25','07:35','07:45','08:05','08:40','09:15','11:55','12:20','12:40','13:20','14:00','14:30','15:00','15:30','15:50','16:00','16:15','16:30','17:00','17:30','20:30','20:48'],stazione:['06:05','06:45','07:05','07:15','07:25','07:35','07:50','08:25','08:55','09:30','12:05','12:30','13:05','13:45','14:15','14:45','15:15','15:35','15:42','16:06','16:15','16:25','16:45','17:15','17:45','20:40','21:05']};function aggiorna(){const t=document.getElementById('destinazione').value;const arr=orari[t];const n=new Date();const now=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');let p=null;for(let o of arr){if(o>=now){p=o;break;}}const ul=document.getElementById('lista');ul.innerHTML='';if(p){const[h,m]=p.split(':');const d=new Date();d.setHours(h);d.setMinutes(m);const min=Math.ceil((d-n)/60000);document.getElementById('prossima').innerText=p;document.getElementById('attesa').innerText='tra '+min+' minuti';let mostra = false;for(let o of arr){if(o === p){mostra = true;continue;}if(mostra){let li = document.createElement('li');li.textContent = o;ul.appendChild(li);}}}else{document.getElementById('prossima').innerText='Nessuna corsa';document.getElementById('attesa').innerText='Servizio terminato';}}aggiorna();setInterval(aggiorna,60000);if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js'));}</script></body></html>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corsette Lazzaretto</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0065b3">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f8; margin: 0; padding: 20px; }
+        .container { max-width: 700px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 3px 12px rgba(0,0,0,.12); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        h1 { color: #0065b3; margin: 0; font-size: 24px; }
+        .btn-refresh { background: #0065b3; color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,.15); transition: transform .2s, background-color .2s; }
+        .btn-refresh:active { transform: scale(.92); background-color: #004a83; }
+        label { display: block; margin-bottom: 8px; font-size: 16px; font-weight: bold; color: #555; }
+        select { width: 100%; padding: 12px; font-size: 18px; border-radius: 8px; border: 1px solid #ccc; outline: none; background-color: #fff; box-sizing: border-box; }
+        .card { background: #0065b3; color: white; padding: 20px; border-radius: 10px; margin-top: 20px; position: relative; }
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+        .next { font-size: 38px; font-weight: bold; margin: 8px 0 4px 0; }
+        .badge-domani { font-size: 18px; font-weight: normal; opacity: .85; margin-left: 8px; }
+        .info-arrivo { font-size: 14px; opacity: .9; margin-top: 4px; }
+        .btn-bell-main { background: rgba(255,255,255,.2); color: white; border: 1px solid rgba(255,255,255,.4); border-radius: 8px; padding: 8px 12px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background .2s; white-space: nowrap; }
+        .btn-bell-main:hover { background: rgba(255,255,255,.3); }
+        h3 { color: #333; margin-top: 25px; margin-bottom: 10px; }
+        ul { padding: 0; margin: 0; }
+        li { background: #eef4fa; padding: 12px 15px; margin: 8px 0; border-radius: 8px; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; }
+        .li-info { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .li-arrivo { font-size: 13px; color: #666; font-weight: normal; }
+        .tag-domani { font-size: 11px; background: #d0e1f9; color: #004080; padding: 2px 6px; border-radius: 10px; font-weight: bold; text-transform: uppercase; }
+        .btn-bell { background: white; border: 1px solid #0065b3; color: #0065b3; border-radius: 6px; padding: 6px 10px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: background .2s; white-space: nowrap; }
+        .btn-bell:hover { background-color: #e6f0fa; }
+        .btn-espandi { width: 100%; background: #eef4fa; color: #0065b3; border: 2px dashed #0065b3; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 15px; transition: background .2s; }
+        .btn-espandi:hover { background: #e0ecf8; }
+        .nota-promemoria { color: #666; font-size: 12px; margin-top: 12px; line-height: 1.35; }
+        @media (max-width: 520px) {
+            body { padding: 12px; }
+            .container { padding: 18px; }
+            h1 { font-size: 22px; }
+            .card-top { flex-direction: column; }
+            .btn-bell-main { width: 100%; justify-content: center; }
+            li { align-items: stretch; flex-direction: column; }
+            .btn-bell { justify-content: center; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚍 Corsette Lazzaretto</h1>
+            <button class="btn-refresh" onclick="aggiornaManuale()" title="Aggiorna orari">🔄</button>
+        </div>
+
+        <label>DESTINAZIONE</label>
+
+<div style="margin-bottom:15px;">
+
+    <label style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <input
+            type="radio"
+            name="destinazione"
+            value="lazzaretto"
+            onchange="cambiaDestinazioneRadio(this.value)"
+            checked>
+        VIA DEL LAZZARETTO
+    </label>
+
+    <label style="display:flex;align-items:center;gap:8px;">
+        <input
+            type="radio"
+            name="destinazione"
+            value="fioravanti"
+            onchange="cambiaDestinazioneRadio(this.value)">
+        STAZIONE DI BOLOGNA
+    </label>
+
+</div>
+
+<input type="hidden" id="destinazione" value="lazzaretto">
+
+<div class="card">
+            <div class="card-top">
+                <div>Prossima partenza</div>
+                <button class="btn-bell-main" id="btn-bell-prossima">🔔 Promemoria</button>
+            </div>
+            <div class="next" id="prossima">--:--</div>
+            <div id="attesa">--</div>
+            <div class="info-arrivo" id="arrivo-prossima">--</div>
+        </div>
+
+        <h3>Corse successive</h3>
+        <ul id="lista"></ul>
+        <button class="btn-espandi" id="btn-espandi" onclick="toggleEspandi()">Vedi tutte le corse</button>
+        <div class="nota-promemoria">Il pulsante promemoria crea un file calendario con avviso 10 minuti prima della partenza.</div>
+    </div>
+
+    <script>
+    // Tabella delle partenze e degli arrivi esatti (Lun-Ven) estratta dal PDF
+    const corse = {
+      lazzaretto: [
+        { dep: '05:45', arr: '05:53' }, { dep: '06:35', arr: '06:43' }, { dep: '06:55', arr: '07:05' },
+        { dep: '07:05', arr: '07:15' }, { dep: '07:15', arr: '07:25' }, { dep: '07:25', arr: '07:35' },
+        { dep: '07:35', arr: '07:45' }, { dep: '07:45', arr: '07:55' }, { dep: '08:05', arr: '08:17' },
+        { dep: '08:40', arr: '08:52' }, { dep: '09:15', arr: '09:27' }, { dep: '11:55', arr: '12:05' },
+        { dep: '12:20', arr: '12:30' }, { dep: '12:40', arr: '12:50' }, { dep: '13:20', arr: '13:30' },
+        { dep: '14:00', arr: '14:12' }, { dep: '14:30', arr: '14:42' }, { dep: '15:00', arr: '15:12' },
+        { dep: '15:30', arr: '15:42' }, { dep: '15:50', arr: '16:00' }, { dep: '16:00', arr: '16:12' },
+        { dep: '16:15', arr: '16:25' }, { dep: '16:30', arr: '16:42' }, { dep: '17:00', arr: '17:12' },
+        { dep: '17:30', arr: '17:42' }, { dep: '20:30', arr: '20:40' }, { dep: '20:48', arr: '20:58' }
+      ],
+      fioravanti: [
+        { dep: '06:05', arr: '06:13' }, { dep: '06:45', arr: '06:53' }, { dep: '07:05', arr: '07:15' },
+        { dep: '07:15', arr: '07:25' }, { dep: '07:25', arr: '07:35' }, { dep: '07:35', arr: '07:45' },
+        { dep: '07:50', arr: '08:02' }, { dep: '08:25', arr: '08:37' }, { dep: '08:55', arr: '09:07' },
+        { dep: '09:30', arr: '09:42' }, { dep: '12:05', arr: '12:17' }, { dep: '12:30', arr: '12:40' },
+        { dep: '13:05', arr: '13:17' }, { dep: '13:45', arr: '13:57' }, { dep: '14:15', arr: '14:27' },
+        { dep: '14:45', arr: '14:57' }, { dep: '15:15', arr: '15:27' }, { dep: '15:35', arr: '15:47' },
+        { dep: '15:42', arr: '15:54' }, { dep: '16:06', arr: '16:15' }, { dep: '16:15', arr: '16:27' },
+        { dep: '16:25', arr: '16:37' }, { dep: '16:45', arr: '16:57' }, { dep: '17:15', arr: '17:27' },
+        { dep: '17:45', arr: '17:57' }, { dep: '20:40', arr: '20:48' }, { dep: '21:05', arr: '21:13' }
+      ]
+    };
+
+    let mostraTutte = false;
+    const sel = document.getElementById('destinazione');
+
+    function formatICSDate(date) {
+      const y = date.getFullYear();
+      const mo = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      const hh = String(date.getHours()).padStart(2, '0');
+      const mm = String(date.getMinutes()).padStart(2, '0');
+      const ss = String(date.getSeconds()).padStart(2, '0');
+      return `${y}${mo}${d}T${hh}${mm}${ss}`;
+    }
+
+    function escapeICS(text) {
+      return String(text)
+        .replace(/\\/g, '\\\\')
+        .replace(/;/g, '\\;')
+        .replace(/,/g, '\\,')
+        .replace(/\n/g, '\\n');
+    }
+
+    function creaPromemoria(oraPartenza, oraArrivo, isDomani) {
+      const [h, m] = oraPartenza.split(':').map(Number);
+      const dataPartenza = new Date();
+      if (isDomani) { dataPartenza.setDate(dataPartenza.getDate() + 1); }
+      dataPartenza.setHours(h, m, 0, 0);
+
+      const [ha, ma] = oraArrivo.split(':').map(Number);
+      const dataArrivo = new Date(dataPartenza);
+      dataArrivo.setHours(ha, ma, 0, 0);
+      if (dataArrivo < dataPartenza) { dataArrivo.setDate(dataArrivo.getDate() + 1); }
+
+const destNome =
+    sel.value === 'lazzaretto'
+        ? 'VIA DEL LAZZARETTO'
+        : 'STAZIONE DI BOLOGNA';
+      const titolo = `Navetta per ${destNome}`;
+      const dettagli = `Partenza navetta alle ${oraPartenza}. Arrivo previsto alle ${oraArrivo}.`;
+      const adesso = new Date();
+
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Corsette Lazzaretto//PWA//IT',
+        'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
+        'BEGIN:VEVENT',
+        `UID:navetta-${sel.value}-${dataPartenza.getTime()}@corsette-lazzaretto`,
+        `DTSTAMP:${formatICSDate(adesso)}`,
+        `DTSTART:${formatICSDate(dataPartenza)}`,
+        `DTEND:${formatICSDate(dataArrivo)}`,
+        `SUMMARY:${escapeICS(titolo)}`,
+        `DESCRIPTION:${escapeICS(dettagli)}`,
+        `LOCATION:${escapeICS(destNome)}`,
+        'BEGIN:VALARM',
+        'TRIGGER:-PT10M',
+        'ACTION:DISPLAY',
+        'DESCRIPTION:Promemoria navetta tra 10 minuti',
+        'END:VALARM',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `promemoria-navetta-${oraPartenza.replace(':', '')}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function cambiaDestinazione() {
+      localStorage.setItem('destinazione_selezionata', sel.value);
+      aggiorna();
+    }
+function cambiaDestinazioneRadio(valore) {
+
+    sel.value = valore;
+
+    aggiorna();
+
+}
+    function aggiornaManuale() {
+      const btn = document.querySelector('.btn-refresh');
+      btn.style.transform = 'rotate(360deg)';
+      btn.style.transition = 'transform 0.4s ease';
+      setTimeout(() => { btn.style.transform = 'none'; btn.style.transition = 'none'; }, 400);
+      aggiorna();
+    }
+
+    function toggleEspandi() {
+      mostraTutte = !mostraTutte;
+      const btn = document.getElementById('btn-espandi');
+      btn.textContent = mostraTutte ? 'Mostra meno' : 'Vedi tutte le corse';
+      aggiorna();
+    }
+
+    function aggiorna() {
+      const t = sel.value;
+      const arr = corse[t];
+      const now = new Date();
+      const attualiMinuti = now.getHours() * 60 + now.getMinutes();
+      let corseFuture = [];
+
+      for (let c of arr) {
+        const [h, m] = c.dep.split(':').map(Number);
+        const corsaMinuti = h * 60 + m;
+        if (corsaMinuti >= attualiMinuti) {
+          corseFuture.push({ orario: c.dep, arrivo: c.arr, minutiAttesa: corsaMinuti - attualiMinuti, isDomani: false });
+        }
+      }
+
+      for (let c of arr) {
+        const [h, m] = c.dep.split(':').map(Number);
+        const corsaMinuti = h * 60 + m;
+        corseFuture.push({ orario: c.dep, arrivo: c.arr, minutiAttesa: (1440 - attualiMinuti) + corsaMinuti, isDomani: true });
+      }
+
+      const prossima = corseFuture[0];
+
+      if (prossima.isDomani) {
+        document.getElementById('prossima').innerHTML = `${prossima.orario} <span class="badge-domani">(domani)</span>`;
+      } else {
+        document.getElementById('prossima').innerText = prossima.orario;
+      }
+
+      document.getElementById('arrivo-prossima').innerText = `🏁 Arrivo previsto a destinazione: ${prossima.arrivo}`;
+      document.getElementById('btn-bell-prossima').onclick = () => creaPromemoria(prossima.orario, prossima.arrivo, prossima.isDomani);
+
+      const m = prossima.minutiAttesa;
+      if (m >= 60) {
+        const ore = Math.floor(m / 60);
+        const minRimanenti = m % 60;
+        document.getElementById('attesa').innerText = `tra ${ore}h e ${minRimanenti}m`;
+      } else {
+        document.getElementById('attesa').innerText = `tra ${m} minuti`;
+      }
+
+      const ul = document.getElementById('lista');
+      ul.innerHTML = '';
+      const corseSuccessive = mostraTutte
+    ? corseFuture.slice(1)
+    : corseFuture.slice(1, 6);
+
+      for (let c of corseSuccessive) {
+        let li = document.createElement('li');
+        let divInfo = document.createElement('div');
+        divInfo.className = 'li-info';
+        let spanOra = document.createElement('strong');
+        spanOra.textContent = c.orario;
+        divInfo.appendChild(spanOra);
+        let spanArrivo = document.createElement('span');
+        spanArrivo.className = 'li-arrivo';
+        spanArrivo.textContent = `(Arr. ${c.arrivo})`;
+        divInfo.appendChild(spanArrivo);
+        if (c.isDomani) {
+          let tag = document.createElement('span');
+          tag.className = 'tag-domani';
+          tag.textContent = 'domani';
+          divInfo.appendChild(tag);
+        }
+        li.appendChild(divInfo);
+        let btnBell = document.createElement('button');
+        btnBell.className = 'btn-bell';
+        btnBell.innerHTML = '🔔 Promemoria';
+	btnBell.title = 'Promemoria 10 minuti prima della partenza';
+        btnBell.onclick = () => creaPromemoria(c.orario, c.arrivo, c.isDomani);
+        li.appendChild(btnBell);
+        ul.appendChild(li);
+      }
+    }
+
+    aggiorna();
+    setInterval(aggiorna, 30000);
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js'));
+    }
+    </script>
+</body>
+</html>
