@@ -330,7 +330,66 @@
             background: #365d8b;
             color: #eaf4ff;
         }
+	/* ===== Destinazione stile schede ===== */
 
+.dest-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #0065b3;
+}
+
+.dest-tabs label {
+    flex: 1;
+    margin: 0;
+    padding: 14px 10px;
+    text-align: center;
+    cursor: pointer;
+    background: white;
+    color: #0065b3;
+    font-weight: bold;
+    transition: all .2s;
+    border-right: 1px solid #0065b3;
+}
+
+.dest-tabs label:last-child {
+    border-right: none;
+}
+
+.dest-tabs input[type="radio"] {
+    display: none;
+}
+
+.dest-tabs input[type="radio"]:checked + span {
+    background: #0065b3;
+    color: white;
+}
+
+.dest-tabs span {
+    display: block;
+    padding: 8px 4px;
+    margin: -14px -10px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    transition: all .2s;
+}
+
+body.dark .dest-tabs {
+    border-color: #75bfff;
+}
+
+body.dark .dest-tabs label {
+    background: #1a2027;
+    color: #75bfff;
+    border-right-color: #75bfff;
+}
+
+body.dark .dest-tabs input[type="radio"]:checked + span {
+    background: #75bfff;
+    color: #101418;
+}
         @media (max-width: 520px) {
             body {
                 padding: 12px;
@@ -380,26 +439,30 @@
 
         <label>DESTINAZIONE</label>
 
-        <div style="margin-bottom:15px;">
-            <label style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                <input
-                    type="radio"
-                    name="destinazione"
-                    value="lazzaretto"
-                    onchange="cambiaDestinazioneRadio(this.value)"
-                    checked>
-                VIA DEL LAZZARETTO
-            </label>
+<div class="dest-tabs">
 
-            <label style="display:flex;align-items:center;gap:8px;">
-                <input
-                    type="radio"
-                    name="destinazione"
-                    value="fioravanti"
-                    onchange="cambiaDestinazioneRadio(this.value)">
-                STAZIONE DI BOLOGNA
-            </label>
-        </div>
+    <label>
+        <input
+            type="radio"
+            name="destinazione"
+            value="lazzaretto"
+            onchange="cambiaDestinazioneRadio(this.value)"
+            checked>
+
+        <span>LAZZARETTO</span>
+    </label>
+
+    <label>
+        <input
+            type="radio"
+            name="destinazione"
+            value="fioravanti"
+            onchange="cambiaDestinazioneRadio(this.value)">
+
+        <span>STAZIONE</span>
+    </label>
+
+</div>
 
         <input type="hidden" id="destinazione" value="lazzaretto">
 
@@ -426,7 +489,7 @@
         </div>
 
         <div class="versione-app">
-            v0.6
+            v0.7
         </div>
     </div>
 
@@ -694,15 +757,17 @@ function apriMappaNavetta() {
 
     if (sel.value === 'lazzaretto') {
 
-        // salita per andare al Lazzaretto
+        // Punto di partenza navetta per Via del Lazzaretto
         lat = 44.508283;
         lon = 11.340235;
 
     } else {
 
-        // salita per andare alla Stazione
-        lat = 44.512556;
-        lon = 11.321255;
+        // Selezione STAZIONE DI BOLOGNA
+        // al momento uso le stesse coordinate finché non mi dai quelle dell'altra fermata
+
+        lat = 44.508283;
+        lon = 11.340235;
     }
 
     window.open(
