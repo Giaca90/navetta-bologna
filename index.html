@@ -777,6 +777,7 @@ function generaCorseFuture() {
         document.getElementById('attesa').innerText = 'Nessuna corsa disponibile';
         document.getElementById('arrivo-prossima').innerText = '--';
         card.classList.remove('imminente');
+        card.classList.remove('urgentissima');
         return;
       }
 
@@ -824,7 +825,19 @@ if (diffMs < 5 * 60 * 1000 && diffMs >= 0) {
     card.classList.remove('imminente');
     card.classList.remove('urgentissima');
 
-    ...
+    if (minutiTotali >= 60) {
+
+        const ore = Math.floor(minutiTotali / 60);
+        const minRimanenti = minutiTotali % 60;
+
+        document.getElementById('attesa').innerText =
+            `tra ${ore}h e ${minRimanenti}m`;
+
+    } else {
+
+        document.getElementById('attesa').innerText =
+            `tra ${minutiTotali} minuti`;
+    }
 }
       const ul = document.getElementById('lista');
       ul.innerHTML = '';
