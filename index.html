@@ -93,7 +93,13 @@
             box-shadow: 0 0 0 4px rgba(232,93,4,.18), 0 6px 18px rgba(0,0,0,.22);
             animation: pulseImminente 1.4s infinite;
         }
-
+.card.urgentissima {
+    background: #d62828;
+    box-shadow:
+        0 0 0 4px rgba(214,40,40,.25),
+        0 0 20px rgba(214,40,40,.55);
+    animation: pulseUrgente 0.8s infinite;
+}
         @keyframes pulseImminente {
             0% {
                 transform: scale(1);
@@ -105,7 +111,22 @@
                 transform: scale(1);
             }
         }
+@keyframes pulseUrgente {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
 
+    50% {
+        transform: scale(1.04);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
         .card-top {
             display: flex;
             justify-content: space-between;
@@ -776,26 +797,35 @@ function generaCorseFuture() {
       const totaleSecondi = Math.max(0, Math.floor(diffMs / 1000));
       const minutiTotali = Math.ceil(diffMs / 60000);
 
-      if (diffMs < 10 * 60 * 1000 && diffMs >= 0) {
-        const minuti = Math.floor(totaleSecondi / 60);
-        const secondi = totaleSecondi % 60;
+if (diffMs < 5 * 60 * 1000 && diffMs >= 0) {
 
-        document.getElementById('attesa').innerText =
-          `tra ${minuti}m ${String(secondi).padStart(2, '0')}s`;
+    const minuti = Math.floor(totaleSecondi / 60);
+    const secondi = totaleSecondi % 60;
 
-        card.classList.add('imminente');
-      } else {
-        card.classList.remove('imminente');
+    document.getElementById('attesa').innerText =
+        `⛔ tra ${minuti}m ${String(secondi).padStart(2,'0')}s`;
 
-        if (minutiTotali >= 60) {
-          const ore = Math.floor(minutiTotali / 60);
-          const minRimanenti = minutiTotali % 60;
-          document.getElementById('attesa').innerText = `tra ${ore}h e ${minRimanenti}m`;
-        } else {
-          document.getElementById('attesa').innerText = `tra ${minutiTotali} minuti`;
-        }
-      }
+    card.classList.remove('imminente');
+    card.classList.add('urgentissima');
 
+} else if (diffMs < 10 * 60 * 1000 && diffMs >= 0) {
+
+    const minuti = Math.floor(totaleSecondi / 60);
+    const secondi = totaleSecondi % 60;
+
+    document.getElementById('attesa').innerText =
+        `⚠️ tra ${minuti}m ${String(secondi).padStart(2,'0')}s`;
+
+    card.classList.remove('urgentissima');
+    card.classList.add('imminente');
+
+} else {
+
+    card.classList.remove('imminente');
+    card.classList.remove('urgentissima');
+
+    ...
+}
       const ul = document.getElementById('lista');
       ul.innerHTML = '';
 
