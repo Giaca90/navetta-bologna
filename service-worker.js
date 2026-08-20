@@ -1,4 +1,4 @@
-const CACHE_NAME = "navetta-v06";
+const CACHE_NAME = "navetta-v07";
 
 self.addEventListener("install", event => {
 
