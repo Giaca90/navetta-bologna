@@ -407,6 +407,7 @@
             <div class="card-top">
                 <div>Prossima partenza</div>
                 <button class="btn-bell-main" id="btn-bell-prossima">🔔 Promemoria</button>
+                <button class="btn-bell-main" onclick="apriMappaNavetta()">📍 Dove salire</button>
             </div>
 
             <div class="next" id="prossima">--:--</div>
@@ -425,7 +426,7 @@
         </div>
 
         <div class="versione-app">
-            v0.5
+            v0.6
         </div>
     </div>
 
@@ -685,6 +686,31 @@ function tipoGiorno(data) {
 function cambiaDestinazioneRadio(valore) {
     sel.value = valore;
     aggiorna();
+}
+function apriMappaNavetta() {
+
+    let lat;
+    let lon;
+
+    if (sel.value === 'lazzaretto') {
+
+        // Punto di partenza navetta per Via del Lazzaretto
+        lat = 44.508283;
+        lon = 11.340235;
+
+    } else {
+
+        // Selezione STAZIONE DI BOLOGNA
+        // al momento uso le stesse coordinate finché non mi dai quelle dell'altra fermata
+
+        lat = 44.508283;
+        lon = 11.340235;
+    }
+
+    window.open(
+        `https://www.google.com/maps?q=${lat},${lon}`,
+        '_blank'
+    );
 }
     function aggiornaManuale() {
       const btn = document.querySelector('.btn-refresh');
