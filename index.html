@@ -8,6 +8,49 @@
     <meta name="theme-color" content="#0065b3">
 
     <style>
+/* ===== COLORI DINAMICI IN BASE AL GIORNO ===== */
+
+:root {
+    /* Da lunedì a venerdì: blu */
+    --tema-principale: #0065b3;
+    --tema-scuro: #004a83;
+    --tema-chiaro: #eef4fa;
+    --tema-hover: #e0ecf8;
+    --tema-tag: #d0e1f9;
+    --tema-testo-tag: #004080;
+    --tema-dark-mode: #75bfff;
+    --tema-dark-hover: #223247;
+    --tema-dark-lista: #263241;
+    --tema-dark-tag: #365d8b;
+}
+
+/* Sabato: verde */
+body.tema-sabato {
+    --tema-principale: #2e7d32;
+    --tema-scuro: #1b5e20;
+    --tema-chiaro: #e8f5e9;
+    --tema-hover: #d8eed9;
+    --tema-tag: #c8e6c9;
+    --tema-testo-tag: #1b5e20;
+    --tema-dark-mode: #81c784;
+    --tema-dark-hover: #263d2a;
+    --tema-dark-lista: #26392b;
+    --tema-dark-tag: #386b3c;
+}
+
+/* Domenica e giorni festivi: rosa */
+body.tema-festivo {
+    --tema-principale: #c2185b;
+    --tema-scuro: #880e4f;
+    --tema-chiaro: #fce4ec;
+    --tema-hover: #f8d5e1;
+    --tema-tag: #f8bbd0;
+    --tema-testo-tag: #880e4f;
+    --tema-dark-mode: #f48fb1;
+    --tema-dark-hover: #452534;
+    --tema-dark-lista: #3c2932;
+    --tema-dark-tag: #7c3453;
+}
         body {
             font-family: Arial, sans-serif;
             background: #f4f6f8;
@@ -41,15 +84,15 @@
             gap: 8px;
         }
 
-        h1 {
-            color: #0065b3;
-            margin: 0;
-            font-size: 24px;
-        }
+h1 {
+    color: var(--tema-principale);
+    margin: 0;
+    font-size: 24px;
+}
 
         .btn-refresh,
         .btn-dark {
-            background: #0065b3;
+            background: var(--tema-principale);
             color: white;
             border: none;
             border-radius: 50%;
@@ -64,11 +107,11 @@
             transition: transform .2s, background-color .2s;
         }
 
-        .btn-refresh:active,
-        .btn-dark:active {
-            transform: scale(.92);
-            background-color: #004a83;
-        }
+.btn-refresh:active,
+.btn-dark:active {
+    transform: scale(.92);
+    background-color: var(--tema-scuro);
+}
 
         label {
             display: block;
@@ -79,7 +122,7 @@
         }
 
         .card {
-            background: #0065b3;
+            background: var(--tema-principale);
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -184,7 +227,7 @@
         }
 
         li {
-            background: #eef4fa;
+            background: var(--tema-chiaro);
             padding: 12px 15px;
             margin: 8px 0;
             border-radius: 8px;
@@ -211,20 +254,19 @@
             font-weight: normal;
         }
 
-        .tag-domani {
-            font-size: 11px;
-            background: #d0e1f9;
-            color: #004080;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .btn-bell {
-            background: white;
-            border: 1px solid #0065b3;
-            color: #0065b3;
+.tag-domani {
+    font-size: 11px;
+    background: var(--tema-tag);
+    color: var(--tema-testo-tag);
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.btn-bell {
+    background: white;
+    border: 1px solid var(--tema-principale);
+    color: var(--tema-principale);
             border-radius: 6px;
             padding: 6px 10px;
             font-size: 13px;
@@ -237,14 +279,14 @@
         }
 
         .btn-bell:hover {
-            background-color: #e6f0fa;
+            background-color: var(--tema-chiaro);
         }
 
-        .btn-espandi {
-            width: 100%;
-            background: #eef4fa;
-            color: #0065b3;
-            border: 2px dashed #0065b3;
+.btn-espandi {
+    width: 100%;
+    background: var(--tema-chiaro);
+    color: var(--tema-principale);
+    border: 2px dashed var(--tema-principale);
             padding: 12px;
             font-size: 15px;
             font-weight: bold;
@@ -255,7 +297,7 @@
         }
 
         .btn-espandi:hover {
-            background: #e0ecf8;
+            background: var(--tema-hover);
         }
 
         .nota-promemoria {
@@ -284,7 +326,7 @@
         }
 
         body.dark h1 {
-            color: #75bfff;
+            color: var(--tema-dark-mode);
         }
 
         body.dark label,
@@ -292,33 +334,30 @@
             color: #e5e5e5;
         }
 
-        body.dark li {
-            background: #263241;
-            color: #f1f1f1;
-        }
-
+body.dark li {
+    background: var(--tema-dark-lista);
+    color: #f1f1f1;
+}
         body.dark .li-arrivo {
             color: #c7c7c7;
         }
 
-        body.dark .btn-bell {
-            background: #1a2027;
-            color: #75bfff;
-            border-color: #75bfff;
-        }
-
+body.dark .btn-bell {
+    background: #1a2027;
+    color: var(--tema-dark-mode);
+    border-color: var(--tema-dark-mode);
+}
         body.dark .btn-bell:hover {
-            background: #223247;
+            background: var(--tema-dark-hover);
         }
 
-        body.dark .btn-espandi {
-            background: #263241;
-            color: #75bfff;
-            border-color: #75bfff;
-        }
-
+body.dark .btn-espandi {
+    background: var(--tema-dark-lista);
+    color: var(--tema-dark-mode);
+    border-color: var(--tema-dark-mode);
+}
         body.dark .btn-espandi:hover {
-            background: #2d3c4f;
+            background: var(--tema-dark-hover);
         }
 
         body.dark .nota-promemoria,
@@ -326,11 +365,11 @@
             color: #aaa;
         }
 
-        body.dark .tag-domani {
-            background: #365d8b;
-            color: #eaf4ff;
-        }
-	/* ===== Destinazione stile schede ===== */
+body.dark .tag-domani {
+    background: var(--tema-dark-tag);
+    color: #ffffff;
+}
+/* ===== Destinazione stile schede ===== */
 
 .dest-tabs {
     display: flex;
@@ -338,7 +377,7 @@
     margin-bottom: 15px;
     border-radius: 12px;
     overflow: hidden;
-    border: 2px solid #0065b3;
+border: 2px solid var(--tema-principale);
 }
 
 .dest-tabs label {
@@ -348,10 +387,10 @@
     text-align: center;
     cursor: pointer;
     background: white;
-    color: #0065b3;
+    color: var(--tema-principale);
     font-weight: bold;
     transition: all .2s;
-    border-right: 1px solid #0065b3;
+    border-right: 1px solid var(--tema-principale);
 }
 
 .dest-tabs label:last-child {
@@ -363,7 +402,7 @@
 }
 
 .dest-tabs input[type="radio"]:checked + span {
-    background: #0065b3;
+    background: var(--tema-principale);
     color: white;
 }
 
@@ -377,17 +416,17 @@
 }
 
 body.dark .dest-tabs {
-    border-color: #75bfff;
+    border-color: var(--tema-dark-mode);
 }
 
 body.dark .dest-tabs label {
     background: #1a2027;
-    color: #75bfff;
-    border-right-color: #75bfff;
+    color: var(--tema-dark-mode);
+    border-right-color: var(--tema-dark-mode);
 }
 
 body.dark .dest-tabs input[type="radio"]:checked + span {
-    background: #75bfff;
+    background: var(--tema-dark-mode);
     color: #101418;
 }
         @media (max-width: 520px) {
@@ -489,7 +528,7 @@ body.dark .dest-tabs input[type="radio"]:checked + span {
         </div>
 
         <div class="versione-app">
-            v0.7
+            v0.8
         </div>
     </div>
 
@@ -666,6 +705,38 @@ function tipoGiorno(data) {
 
   return 'feriale';
 }
+function applicaTemaGiorno() {
+    const oggi = new Date();
+    const tipoOggi = tipoGiorno(oggi);
+
+    document.body.classList.remove(
+        'tema-sabato',
+        'tema-festivo'
+    );
+
+    if (tipoOggi === 'sabato') {
+        document.body.classList.add('tema-sabato');
+    } else if (tipoOggi === 'festivo') {
+        document.body.classList.add('tema-festivo');
+    }
+
+    const coloriBarraBrowser = {
+        feriale: '#0065b3',
+        sabato: '#2e7d32',
+        festivo: '#c2185b'
+    };
+
+    const metaTema = document.querySelector(
+        'meta[name="theme-color"]'
+    );
+
+    if (metaTema) {
+        metaTema.setAttribute(
+            'content',
+            coloriBarraBrowser[tipoOggi]
+        );
+    }
+}
     function etichettaGiorno(offset, data) {
       if (offset === 0) {
         return '';
@@ -773,20 +844,18 @@ function apriMappaNavetta() {
         '_blank'
     );
 }
-    function aggiornaManuale() {
-      const btn = document.querySelector('.btn-refresh');
+function aggiornaManuale() {
+    const btn = document.querySelector('.btn-refresh');
+    btn.style.transform = 'rotate(360deg)';
+    btn.style.transition = 'transform 0.4s ease';
 
-      btn.style.transform = 'rotate(360deg)';
-      btn.style.transition = 'transform 0.4s ease';
-
-      setTimeout(() => {
+    setTimeout(() => {
         btn.style.transform = 'none';
         btn.style.transition = 'none';
-      }, 400);
+    }, 400);
 
-      aggiorna();
-    }
-
+    aggiorna();
+}
     function toggleEspandi() {
       mostraTutte = !mostraTutte;
 
@@ -854,8 +923,10 @@ function generaCorseFuture() {
 
   return corseFuture;
 }
-    function aggiorna() {
-      const corseFuture = generaCorseFuture();
+function aggiorna() {
+    applicaTemaGiorno();
+
+    const corseFuture = generaCorseFuture();
       const prossima = corseFuture[0];
       const card = document.getElementById('card-prossima');
 
