@@ -461,6 +461,12 @@ body.dark .dest-tabs input[type="radio"]:checked + span {
                 width: 100%;
             }
         }
+
+/* ===== LINK RFI CON LOGO FS ===== */
+.btn-rfi { display: none; text-decoration: none; }
+.btn-rfi.visibile { display: flex; }
+.fs-logo { width: 31px; height: 22px; flex: 0 0 auto; padding: 2px 4px; background: transparent; border-radius: 4px; }
+
     </style>
 </head>
 
@@ -471,8 +477,7 @@ body.dark .dest-tabs input[type="radio"]:checked + span {
             <h1>🚍 Corsette Lazzaretto</h1>
 
             <div class="header-actions">
-                <button class="btn-dark" onclick="toggleDarkMode()" title="Modalità scura" id="btn-dark">🌙</button>
-                <button class="btn-refresh" onclick="aggiornaManuale()" title="Aggiorna orari">🔄</button>
+                <button class="btn-dark" onclick="toggleDarkMode()" title="Modalità notturna" id="btn-dark">🌙</button>
             </div>
         </div>
 
@@ -509,7 +514,8 @@ body.dark .dest-tabs input[type="radio"]:checked + span {
             <div class="card-top">
                 <div>Prossima partenza</div>
                 <button class="btn-bell-main" id="btn-bell-prossima">🔔 Promemoria</button>
-                <button class="btn-bell-main" onclick="apriMappaNavetta()">📍 Dove salire</button>
+                <button class="btn-bell-main" id="btn-dove-salire" onclick="apriMappaNavetta()">📍 Dove salire</button>
+                <a class="btn-bell-main btn-rfi" id="btn-rfi" href="https://iechub.rfi.it/ArriviPartenze/ArrivalsDepartures/Monitor?Arrivals=False&amp;Search=&amp;PlaceId=683" target="_blank" rel="noopener noreferrer" title="Partenze Bologna Centrale"><svg class="fs-logo" viewBox="0 0 600 415" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="m572.07 48.355c-162.74 1.4249-189.83 28.104-226.68 95.219l180.05 0.0822zm8.2112-19.72 9.7274-19.025h-266.89c-90.497 0-136.67 30.808-164.75 87.894-21.967 44.646-21.903 44.673-21.903 44.673h121.21c43.12-83.117 95.639-111.77 224.08-113.54zm-341.24 158.11-126.96 12.933-85.583 170.78c67.681 0 102.42-6.6219 142-63.415 16.715-24.296 46.326-72.65 70.54-120.3" fill="#006564"/><path d="m402.44 280.15c-10.696 60.31-57.99 107.91-118.01 118.88 0 0-35.914 6.3205-59.488 6.3388-23.565 0.0183-214.94 0-214.94 0l8.2934-17.007s72.796-0.56629 82.55-0.56629c25.099 0.56629 70.567-4.9596 70.567-4.9596 51.331-5.462 91.711-39.129 104.54-88.076l14.459-49.386c7.855-40.946 43.696-71.919 86.724-71.919l139.26-8.8597-6.6676 13.427-42.892 2.6579c-31.904 2.6122-57.497 27.648-61.077 59.406l-3.3338 40.051z" fill="#dc062b"/></svg><span>Partenze treni</span></a>
             </div>
 
             <div class="next" id="prossima">--:--</div>
@@ -528,7 +534,7 @@ body.dark .dest-tabs input[type="radio"]:checked + span {
         </div>
 
         <div class="versione-app">
-            v0.8
+            v0.9
         </div>
     </div>
 
@@ -817,8 +823,14 @@ function applicaTemaGiorno() {
         URL.revokeObjectURL(url);
       }, 1000);
     }
+function aggiornaAzioniDestinazione() {
+    const stazioneBologna = sel.value === 'fioravanti';
+    document.getElementById('btn-dove-salire').style.display = stazioneBologna ? 'none' : 'flex';
+    document.getElementById('btn-rfi').classList.toggle('visibile', stazioneBologna);
+}
 function cambiaDestinazioneRadio(valore) {
     sel.value = valore;
+    aggiornaAzioniDestinazione();
     aggiorna();
 }
 function apriMappaNavetta() {
@@ -844,18 +856,6 @@ function apriMappaNavetta() {
         '_blank'
     );
 }
-function aggiornaManuale() {
-    const btn = document.querySelector('.btn-refresh');
-    btn.style.transform = 'rotate(360deg)';
-    btn.style.transition = 'transform 0.4s ease';
-
-    setTimeout(() => {
-        btn.style.transform = 'none';
-        btn.style.transition = 'none';
-    }, 400);
-
-    aggiorna();
-}
     function toggleEspandi() {
       mostraTutte = !mostraTutte;
 
@@ -871,7 +871,9 @@ function aggiornaManuale() {
       const darkAttivo = document.body.classList.contains('dark');
       localStorage.setItem('dark_mode_navetta', darkAttivo ? '1' : '0');
 
-      document.getElementById('btn-dark').textContent = darkAttivo ? '☀️' : '🌙';
+      const btnNotte = document.getElementById('btn-dark');
+      btnNotte.textContent = darkAttivo ? '☀️' : '🌙';
+      btnNotte.title = darkAttivo ? 'Disattiva modalità notturna' : 'Attiva modalità notturna';
     }
 
     function caricaDarkMode() {
@@ -880,8 +882,10 @@ function aggiornaManuale() {
       if (darkSalvato === '1') {
         document.body.classList.add('dark');
         document.getElementById('btn-dark').textContent = '☀️';
+        document.getElementById('btn-dark').title = 'Disattiva modalità notturna';
       } else {
         document.getElementById('btn-dark').textContent = '🌙';
+        document.getElementById('btn-dark').title = 'Attiva modalità notturna';
       }
     }
 
@@ -1056,6 +1060,7 @@ if (diffMs < 5 * 60 * 1000 && diffMs >= 0) {
 
     inizializzaDestinazioneDefault();
     caricaDarkMode();
+    aggiornaAzioniDestinazione();
     aggiorna();
 
     setInterval(aggiorna, 1000);
