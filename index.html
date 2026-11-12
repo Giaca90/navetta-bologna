@@ -463,9 +463,33 @@ body.dark .dest-tabs input[type="radio"]:checked + span {
         }
 
 /* ===== LINK RFI CON LOGO FS ===== */
-.btn-rfi { display: none; text-decoration: none; }
-.btn-rfi.visibile { display: flex; }
-.fs-logo { width: 31px; height: 22px; flex: 0 0 auto; padding: 2px 4px; background: transparent; border-radius: 4px; }
+.btn-rfi {
+    display: none;
+    text-decoration: none;
+}
+.btn-rfi.visibile {
+    display: flex;
+}
+.fs-logo {
+    width: 31px;
+    height: 22px;
+    flex: 0 0 auto;
+    padding: 0;
+    background: transparent;
+}
+/* Correzione pulsante RFI su smartphone */
+@media (max-width: 520px) {
+    .btn-rfi.visibile {
+        width: auto;
+        align-self: flex-start;
+        justify-content: center;
+        padding: 8px 12px;
+    }
+    .btn-rfi .fs-logo {
+        width: 28px;
+        height: 20px;
+    }
+}
 
     </style>
 </head>
